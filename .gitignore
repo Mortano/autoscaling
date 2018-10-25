@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Visual Studio files
+.vs
+*.vcxproj.user
+
+# Build
+build/
+build_test/
+x64/
