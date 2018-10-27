@@ -15,15 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\util\circular_vector.h">
+    <ClInclude Include="include\util\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\util\math.h">
+    <ClInclude Include="include\measuring\measurement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\util\cache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\api.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\temp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\measuring\measurement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

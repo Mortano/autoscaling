@@ -1,10 +1,10 @@
 #include "pch.h"
 
-#include "util/circular_vector.h"
+#include "util/cache.h"
 
 using namespace as;
 
-TEST(circular_vector, construct) {
+TEST(cache, construct) {
   const size_t capacity = 4;
 
   as::cache<int> cache{capacity};
@@ -16,7 +16,7 @@ TEST(circular_vector, construct) {
   EXPECT_THROW(cache.at(0), std::out_of_range);
 }
 
-TEST(circular_vector, construct_no_capacity) {
+TEST(cache, construct_no_capacity) {
   // A cache with no capacity makes little sense, but it is still a possibility
   const size_t capacity = 0;
   as::cache<int> cache{capacity};
@@ -24,7 +24,7 @@ TEST(circular_vector, construct_no_capacity) {
   EXPECT_TRUE(cache.is_full());
 }
 
-TEST(circular_vector, insert_const_reference) {
+TEST(cache, insert_const_reference) {
   const size_t capacity = 4;
   as::cache<int> cache{capacity};
 
@@ -37,7 +37,7 @@ TEST(circular_vector, insert_const_reference) {
   EXPECT_EQ(*cache.begin(), value);
 }
 
-TEST(circular_vector, insert_rvalue) {
+TEST(cache, insert_rvalue) {
   struct S {
     explicit S(int val) : val(val) {}
 
@@ -69,7 +69,7 @@ TEST(circular_vector, insert_rvalue) {
   EXPECT_EQ(cache.begin()->val, 42);
 }
 
-TEST(circular_vector, clear) {
+TEST(cache, clear) {
   const size_t capacity = 4;
   as::cache<int> cache{capacity};
 
@@ -82,7 +82,7 @@ TEST(circular_vector, clear) {
   EXPECT_EQ(cache.capacity(), capacity);
 }
 
-TEST(circular_vector, is_full) {
+TEST(cache, is_full) {
   const size_t capacity = 4;
   as::cache<size_t> cache{capacity};
 
@@ -93,7 +93,7 @@ TEST(circular_vector, is_full) {
   EXPECT_TRUE(cache.is_full());
 }
 
-TEST(circular_vector, youngest) {
+TEST(cache, youngest) {
   const size_t capacity = 4;
 
   as::cache<int> cache{capacity};
@@ -111,7 +111,7 @@ TEST(circular_vector, youngest) {
   EXPECT_EQ(cache.youngest(), 3);
 }
 
-TEST(circular_vector, oldest) {
+TEST(cache, oldest) {
   const size_t capacity = 4;
 
   as::cache<int> cache{capacity};
@@ -129,7 +129,7 @@ TEST(circular_vector, oldest) {
   EXPECT_EQ(cache.oldest(), 1);
 }
 
-TEST(circular_vector, access_elements_non_full) {
+TEST(cache, access_elements_non_full) {
   const size_t capacity = 4;
 
   as::cache<int> cache{capacity};
@@ -151,7 +151,7 @@ TEST(circular_vector, access_elements_non_full) {
   EXPECT_EQ(cache.oldest(), 1);
 }
 
-TEST(circular_vector, access_elements_full) {
+TEST(cache, access_elements_full) {
   const size_t capacity = 4;
 
   as::cache<int> cache{capacity};
@@ -179,4 +179,60 @@ TEST(circular_vector, access_elements_full) {
 
   EXPECT_EQ(cache.youngest(), 6);
   EXPECT_EQ(cache.oldest(), 3);
+}
+
+TEST(cache, empty_iterators) {
+  const size_t capacity = 4;
+
+  as::cache<int> cache{capacity};
+
+  EXPECT_TRUE(cache.begin() == cache.end());
+}
+
+TEST(cache, for_each_non_full) {
+  const size_t capacity = 4;
+
+  as::cache<int> cache{capacity};
+
+  cache.insert(1);
+  cache.insert(2);
+  cache.insert(3);
+
+  std::vector<int> for_each_result;
+  for (auto elem : cache) for_each_result.push_back(elem);
+
+  std::vector<int> expected_elements{3, 2, 1};
+
+  EXPECT_EQ(for_each_result, expected_elements);
+}
+
+TEST(cache, for_each_full) {
+  const size_t capacity = 4;
+
+  as::cache<int> cache{capacity};
+
+  cache.insert(1);
+  cache.insert(2);
+  cache.insert(3);
+  cache.insert(4);
+  cache.insert(5);
+
+  std::vector<int> for_each_result;
+  for (auto elem : cache) for_each_result.push_back(elem);
+
+  std::vector<int> expected_elements{5, 4, 3, 2};
+
+  EXPECT_EQ(for_each_result, expected_elements);
+}
+
+TEST(cache, mutate_through_iterator) {
+  const size_t capacity = 4;
+
+  as::cache<int> cache{capacity};
+
+  cache.insert(1);
+
+  *cache.begin() = 42;
+
+  EXPECT_EQ(cache[0], 42);
 }

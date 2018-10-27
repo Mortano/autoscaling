@@ -162,6 +162,8 @@ struct cache {
              _step != other._step;
     }
 
+    bool operator==(iterator const& other) const { return !operator!=(other); }
+
    private:
     bool is_end() const {
       return !_container || _step == _container->capacity();
@@ -213,6 +215,10 @@ struct cache {
     bool operator!=(const_iterator const& other) const {
       return _container != other._container || _offset != other._offset ||
              _step != other._step;
+    }
+
+    bool operator==(const_iterator const& other) const {
+      return !operator==(other);
     }
 
    private:
