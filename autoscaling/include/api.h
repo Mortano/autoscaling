@@ -1,7 +1,9 @@
 #pragma once
 
 #ifdef EXPORT_AS_API
-#define AS_API __declspec(dllexport)
+//#define AS_API __declspec(dllexport)
 #else
-#define AS_API __declspec(dllimport)
+//#define AS_API __declspec(dllimport)
 #endif
+
+#define AS_API

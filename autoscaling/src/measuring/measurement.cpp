@@ -1,5 +1,9 @@
 #include "measuring/measurement.h"
 
+#pragma region time
+as::timestamp_t as::now() { return std::chrono::high_resolution_clock::now(); }
+#pragma endregion
+
 #pragma region memory
 
 as::memory::memory() : _bytes(0) {}
@@ -45,6 +49,15 @@ as::memory as::literals::operator"" _GiB(size_t size) {
 
 as::memory as::literals::operator"" _GB(size_t size) {
   return memory{size * static_cast<size_t>(1e9)};
+}
+
+#pragma endregion
+
+#pragma region type_id
+
+as::type_id_t as::detail::TypeIDBase::next() {
+  static type_id_t s_next_id = 0;
+  return ++s_next_id;
 }
 
 #pragma endregion

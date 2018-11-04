@@ -29,6 +29,17 @@ void dec_wrap(T& val, T threshold) {
     --val;
 }
 
+/// <summary>
+///  Combines hash values
+/// </summary>
+template <typename T>
+inline void hash_combine(size_t& hash, T const& val) {
+  // Stole this from
+  // https://stackoverflow.com/questions/2590677/how-do-i-combine-hash-values-in-c0x
+  std::hash<T> hasher;
+  hash ^= hasher(val) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+}
+
 }  // namespace math
 
 }  // namespace as

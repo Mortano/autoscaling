@@ -3,6 +3,7 @@
 #include "math.h"
 
 #include <array>
+#include <iterator>
 #include <vector>
 
 namespace as {
@@ -129,7 +130,13 @@ struct cache {
   /// oldest
   /// </summary>
   struct iterator {
-    iterator() : _container(nullptr), _step(0), _is_end(true) {}
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+    using pointer = T*;
+    using reference = T&;
+    using iterator_category = std::forward_iterator_tag;
+
+    iterator() : _container(nullptr), _step(0) {}
     iterator(cache* container, size_t offset, size_t step = 0)
         : _container(container), _offset(offset), _step(step) {}
 
@@ -184,8 +191,14 @@ struct cache {
   /// oldest
   /// </summary>
   struct const_iterator {
-    const_iterator() : _container(nullptr), _step(0), _is_end(true) {}
-    const_iterator(cache const* container, size_t offset, size_t step)
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+    using pointer = T*;
+    using reference = T&;
+    using iterator_category = std::forward_iterator_tag;
+
+    const_iterator() : _container(nullptr), _step(0) {}
+    const_iterator(cache const* container, size_t offset, size_t step = 0)
         : _container(container), _offset(offset), _step(step) {}
 
     const_iterator& operator++() {
